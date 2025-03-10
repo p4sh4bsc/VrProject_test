@@ -114,13 +114,15 @@ function init() {
     document.body.appendChild(renderer.domElement);
     // document.body.appendChild(VRButton.createButton(renderer));
     // renderer.xr.enabled = true;
-    if ("xr" in window.navigator) {
-        document.body.appendChild(VRButton.createButton(renderer));
-        renderer.xr.enabled = true;
-    } else {
-        console.log("WebXR не поддерживается. Используем гироскоп.");
-        setupGyroscopeControls();
-    }
+    // if (navigator.xr) {
+    //     document.body.appendChild(VRButton.createButton(renderer));
+    //     renderer.xr.enabled = true;
+    // } else {
+    //     console.warn("WebXR не поддерживается. Используем гироскоп.");
+    //     setupGyroscopeControls();
+    // }
+    console.warn("WebXR не поддерживается. Используем гироскоп.");
+    setupGyroscopeControls();
 
     const geometry = new THREE.SphereGeometry(0.2, 32, 32);
     const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });

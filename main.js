@@ -118,7 +118,7 @@ function init() {
         document.body.appendChild(VRButton.createButton(renderer));
         renderer.xr.enabled = true;
     } else {
-        console.warn("WebXR не поддерживается. Используем гироскоп.");
+        console.log("WebXR не поддерживается. Используем гироскоп.");
         setupGyroscopeControls();
     }
 

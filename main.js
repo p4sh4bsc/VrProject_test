@@ -1,5 +1,9 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.154/build/three.module.js';
+import WebXRPolyfill from 'https://cdn.jsdelivr.net/npm/webxr-polyfill@latest/build/webxr-polyfill.module.js';
 import { VRButton } from 'https://cdn.jsdelivr.net/npm/three@0.154/examples/jsm/webxr/VRButton.js';
+import { DeviceOrientationControls } from 'https://cdn.jsdelivr.net/npm/three@0.154/examples/jsm/controls/DeviceOrientationControls.js';
+
+new WebXRPolyfill();
 
 let scene, camera, renderer, ball;
 let time = 0, mode = 0;
@@ -109,8 +113,14 @@ function init() {
     renderer.domElement.style.touchAction = 'none';
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
-    document.body.appendChild(VRButton.createButton(renderer));
-    renderer.xr.enabled = true;
+
+    if (navigator.xr) {
+        document.body.appendChild(VRButton.createButton(renderer));
+        renderer.xr.enabled = true;
+    } else {
+        console.warn("WebXR не поддерживается. Используем гироскоп.");
+        controls = new DeviceOrientationControls(camera);
+    }
 
     const geometry = new THREE.SphereGeometry(0.2, 32, 32);
     const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
@@ -212,9 +222,11 @@ function animate() {
             break;
         case 5:
             ball.position.x = 3*Math.cos(time * 2);
-            ball.position.y = 1.7*Math.cos(time * 4+3.1415/2); // add pi value
+            ball.position.y = 1.7*Math.cos(time * 4+Math.Pi/2);
             break;
     }
+
+    if (controls) controls.update();
 
     renderer.setAnimationLoop(animate);
     renderer.render(scene, camera);

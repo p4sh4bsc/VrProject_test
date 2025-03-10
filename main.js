@@ -121,8 +121,8 @@ function init() {
     //     console.warn("WebXR не поддерживается. Используем гироскоп.");
     //     setupGyroscopeControls();
     // }
-    console.warn("WebXR не поддерживается. Используем гироскоп.");
-    setupGyroscopeControls();
+    // console.warn("WebXR не поддерживается. Используем гироскоп.");
+    // setupGyroscopeControls();
 
     const geometry = new THREE.SphereGeometry(0.2, 32, 32);
     const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });

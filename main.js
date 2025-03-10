@@ -1,7 +1,6 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.154/build/three.module.js';
 import WebXRPolyfill from 'https://cdn.jsdelivr.net/npm/webxr-polyfill@latest/build/webxr-polyfill.module.js';
 import { VRButton } from 'https://cdn.jsdelivr.net/npm/three@0.154/examples/jsm/webxr/VRButton.js';
-import { DeviceOrientationControls } from 'https://cdn.jsdelivr.net/npm/three@0.154/examples/jsm/controls/DeviceOrientationControls.js';
 
 new WebXRPolyfill();
 
@@ -113,13 +112,14 @@ function init() {
     renderer.domElement.style.touchAction = 'none';
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
-
+    // document.body.appendChild(VRButton.createButton(renderer));
+    // renderer.xr.enabled = true;
     if (navigator.xr) {
         document.body.appendChild(VRButton.createButton(renderer));
         renderer.xr.enabled = true;
     } else {
         console.warn("WebXR не поддерживается. Используем гироскоп.");
-        controls = new DeviceOrientationControls(camera);
+        setupGyroscopeControls();
     }
 
     const geometry = new THREE.SphereGeometry(0.2, 32, 32);
@@ -187,6 +187,27 @@ function init() {
     animate();
 }
 
+
+function setupGyroscopeControls() {
+    window.addEventListener("deviceorientation", (event) => {
+        let alpha = event.alpha ? THREE.MathUtils.degToRad(event.alpha) : 0;
+        let beta = event.beta ? THREE.MathUtils.degToRad(event.beta) : 0;   
+        let gamma = event.gamma ? THREE.MathUtils.degToRad(event.gamma) : 0;
+
+        camera.rotation.set(beta, alpha, -gamma);
+    });
+
+    if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+        DeviceMotionEvent.requestPermission()
+            .then(permissionState => {
+                if (permissionState === 'granted') {
+                    console.log("Доступ к гироскопу разрешен.");
+                }
+            })
+            .catch(console.error);
+    }
+}
+
 function animate() {
     time += speed;
     if (time > 10){
@@ -226,11 +247,10 @@ function animate() {
             break;
     }
 
-    if (controls) controls.update();
+    // if (controls) controls.update();
 
     renderer.setAnimationLoop(animate);
     renderer.render(scene, camera);
 }
 
 init();
-

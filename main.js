@@ -114,7 +114,7 @@ function init() {
     document.body.appendChild(renderer.domElement);
     // document.body.appendChild(VRButton.createButton(renderer));
     // renderer.xr.enabled = true;
-    if (navigator.xr) {
+    if ("xr" in window.navigator) {
         document.body.appendChild(VRButton.createButton(renderer));
         renderer.xr.enabled = true;
     } else {

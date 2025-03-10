@@ -112,7 +112,7 @@ function init() {
     renderer.domElement.style.touchAction = 'none';
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
-    // document.body.appendChild(VRButton.createButton(renderer));
+    document.body.appendChild(VRButton.createButton(renderer));
     // renderer.xr.enabled = true;
     // if (navigator.xr) {
     //     document.body.appendChild(VRButton.createButton(renderer));

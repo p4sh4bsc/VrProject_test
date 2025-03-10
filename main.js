@@ -90,7 +90,7 @@ function changeSkybox() {
 }
 
 function createPathStrings(filename) {
-    const basePath = "./static/";
+    const basePath = "./textures/";
     const baseFilename = basePath + filename;
     const fileType = ".jpg";
     const sides = ["rt", "lf", "up", "dn", "bk", "ft"];

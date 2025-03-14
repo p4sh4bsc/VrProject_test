@@ -14,12 +14,10 @@ let tapTimeout;
 let touchStartX = 0;
 let touchEndX = 0;
 let isSwipe = false;
-let const_time = Date.now();
 const SWIPE_THRESHOLD = 30;
 
 let isVRSessionActive = false;
 let vrControllerStartPosition = null;
-const VR_SWIPE_THRESHOLD = 0.1;
 
 function handleTap() {
     const now = Date.now();
@@ -46,14 +44,6 @@ function handleSwipe() {
    
     console.log("Скорость изменена:", speed);
 }
-// function handleSwipe(direction) {
-//     if (direction === 'right') {
-//         speed = Math.min(speed + 0.05, 5);
-//     } else {
-//         speed = Math.max(speed - 0.05, 0.001);
-//     }
-//     console.log("Скорость изменена:", speed);
-// }
 
 function handleTouchStart(event) {
     if (isVRSessionActive) return;
@@ -114,15 +104,6 @@ function init() {
     document.body.appendChild(renderer.domElement);
     document.body.appendChild(VRButton.createButton(renderer));
     renderer.xr.enabled = true;
-    // if (navigator.xr) {
-    //     document.body.appendChild(VRButton.createButton(renderer));
-    //     renderer.xr.enabled = true;
-    // } else {
-    //     console.warn("WebXR не поддерживается. Используем гироскоп.");
-    //     setupGyroscopeControls();
-    // }
-    // console.warn("WebXR не поддерживается. Используем гироскоп.");
-    // setupGyroscopeControls();
 
     const geometry = new THREE.SphereGeometry(0.2, 32, 32);
     const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
@@ -148,8 +129,6 @@ function init() {
     renderer.domElement.addEventListener('touchend', handleTouchEnd);
     renderer.domElement.addEventListener('click', handleTap);
 
-
-    
 
     renderer.xr.addEventListener('sessionstart', () => {
 
@@ -190,26 +169,6 @@ function init() {
 }
 
 
-function setupGyroscopeControls() {
-    window.addEventListener("deviceorientation", (event) => {
-        let alpha = event.alpha ? THREE.MathUtils.degToRad(event.alpha) : 0;
-        let beta = event.beta ? THREE.MathUtils.degToRad(event.beta) : 0;   
-        let gamma = event.gamma ? THREE.MathUtils.degToRad(event.gamma) : 0;
-
-        camera.rotation.set(beta, alpha, -gamma);
-    });
-
-    if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
-        DeviceMotionEvent.requestPermission()
-            .then(permissionState => {
-                if (permissionState === 'granted') {
-                    console.log("Доступ к гироскопу разрешен.");
-                }
-            })
-            .catch(console.error);
-    }
-}
-
 function animate() {
     time += speed;
     if (time > 10){
@@ -248,8 +207,6 @@ function animate() {
             ball.position.y = 1.7*Math.cos(time * 4+Math.Pi/2);
             break;
     }
-
-    // if (controls) controls.update();
 
     renderer.setAnimationLoop(animate);
     renderer.render(scene, camera);
